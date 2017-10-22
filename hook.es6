@@ -19,6 +19,9 @@ app.post('/hook', (req, res) => {
 
     storage.get((error, data) => {
         if (error) { return res.send(400); }
+        if (!data) {
+            data = { subscriptions: [] }
+        }
 
         const payload = JSON.stringify({
             title: 'Hook trigger',
@@ -38,8 +41,10 @@ app.post('/subscribe', (req, res) => {
 
     storage.get((errorGet, data) => {
         if (errorGet) { return res.send(400); }
-        data = data || {};
-        data.subscriptions = data.subscriptions || [];
+        if (!data) {
+            data = { subscriptions: [] }
+        }
+
         data.subscriptions.push({
             endpoint,
             keys: { p256dh: keys.p256dh, auth: keys.auth },
