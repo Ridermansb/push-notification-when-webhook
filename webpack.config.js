@@ -23,7 +23,10 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({template: resolve(srcFolder, 'index.tpl.html')}),
-        new webpack.ProvidePlugin({jQuery: 'jquery'}),
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery'
+        }),
         new webpack.EnvironmentPlugin(['WEBHOOK_URL', 'VAPID_PUBLIC']),
         new webpack.ProvidePlugin({
             Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
