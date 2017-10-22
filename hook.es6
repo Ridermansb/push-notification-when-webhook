@@ -49,8 +49,9 @@ app.post('/subscribe', (req, res) => {
             endpoint,
             keys: { p256dh: keys.p256dh, auth: keys.auth },
         });
-        storage.set(data);
-        return res.status(200).json({ ok: true });
+        storage.set(data, function() {
+            return res.status(200).json({ ok: true })
+        });
     })
 });
 

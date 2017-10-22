@@ -76,7 +76,7 @@ export default class extends PureComponent {
 
         const displayAction = hasNotificationPermission
             ? <div className="ui fluid action input">
-                <input id="hook" type="text" readOnly="" placeholder="WebHook" value={WEBHOOK_URL} />
+                <input id="hook" type="text" readOnly="" placeholder="WebHook" defaultValue={WEBHOOK_URL} />
                 <button className="ui teal right labeled icon button" data-clipboard-target="#hook"
                     ref={(el) => this.buttonCopyHook = el}>
                     <i className="copy icon"/>Copy
