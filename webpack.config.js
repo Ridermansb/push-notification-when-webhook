@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {resolve} = require('path');
 
 require('dotenv').config();
@@ -32,6 +33,9 @@ module.exports = {
             Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
             fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
         }),
+        new CopyWebpackPlugin([
+            { from: '_redirects' }
+        ])
     ],
     module: {
         rules: [{

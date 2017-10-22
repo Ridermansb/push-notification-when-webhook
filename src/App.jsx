@@ -8,9 +8,7 @@ function urlB64ToUint8Array(base64String) {
     const base64 = (base64String + padding)
         .replace(/\-/g, '+')
         .replace(/_/g, '/');
-    console.log(base64);
     const rawData = window.atob(base64);
-    console.log(rawData);
     const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
