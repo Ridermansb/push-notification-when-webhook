@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react';
+import { autobind } from 'core-decorators';
 import Clipboard from 'clipboard';
 import {subscribe} from './api'
 
@@ -27,8 +28,21 @@ export default class extends PureComponent {
     }
 
     componentDidMount() {
-        this.clipHook = new Clipboard(this.buttonCopyHook);
+        const {hasNotificationPermission} = this.state;
+        if (hasNotificationPermission) {
+            this.setClipboardButton();
+        }
+    }
 
+    componentWillUnmount( ) {
+        if (this.clipHook) {
+            this.clipHook.destroy();
+        }
+    }
+
+    @autobind
+    setClipboardButton() {
+        this.clipHook = new Clipboard(this.buttonCopyHook);
         this.clipHook.on('success', function(e) {
             e.clearSelection();
         });
@@ -39,19 +53,20 @@ export default class extends PureComponent {
         });
     }
 
-    componentWillUnmount( ) {
-        this.clipHook.destroy();
-    }
-
+    @autobind
     async askPermission(e) {
         e.preventDefault();
         const status = await Notification.requestPermission();
-        this.setState({hasNotificationPermission: status === 'granted'});
+        const self = this;
+        this.setState({hasNotificationPermission: status === 'granted'}, function() {
+            self.setClipboardButton();
+        });
         if (status === 'granted') {
             await this.saveSubscription()
         }
     }
 
+    @autobind
     async saveSubscription() {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.subscribe({
@@ -68,6 +83,7 @@ export default class extends PureComponent {
         const displayText = hasNotificationPermission
             ? <span className="content">
                 Copy your webhook bellow and paste whathever you want
+                <pre className="sub header">curl -X POST {WEBHOOK_URL}</pre>
             </span>
             : <span className="content">
                 <i className="circular hand pointer icon"/>
