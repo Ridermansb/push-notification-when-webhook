@@ -7,7 +7,7 @@ require('dotenv').config();
 const srcFolder = resolve(__dirname, 'src');
 
 const redirectApiPattern = /(\/api\/\*)\W(http.+)(\/\:splat)\W(\d+)/g;
-const WEBHOOK_URL = process.env.WEBHOOK_URL;
+const API_URL = process.env.API_URL;
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -30,7 +30,7 @@ module.exports = {
             jQuery: 'jquery',
             $: 'jquery'
         }),
-        new webpack.EnvironmentPlugin(['WEBHOOK_URL', 'VAPID_PUBLIC']),
+        new webpack.EnvironmentPlugin(['API_URL', 'VAPID_PUBLIC']),
         new webpack.ProvidePlugin({
             Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
             fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
@@ -40,7 +40,7 @@ module.exports = {
             toType: 'file',
             transform:  function(content, path){
                 if (path.includes('_redirects')) {
-                    const result = content.toString('utf8').replace(redirectApiPattern, `$1 ${WEBHOOK_URL}$3 $4`);
+                    const result = content.toString('utf8').replace(redirectApiPattern, `$1 ${API_URL}$3 $4`);
                     console.log('Replace _redirects', result);
                     return result;
                 }

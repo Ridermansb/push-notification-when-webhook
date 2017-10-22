@@ -17,7 +17,7 @@ function urlB64ToUint8Array(base64String) {
     return outputArray;
 }
 
-const WEBHOOK_URL = process.env.WEBHOOK_URL;
+const API_URL = process.env.API_URL;
 const VAPID_PUBLIC = process.env.VAPID_PUBLIC;
 
 export default class extends PureComponent {
@@ -81,7 +81,7 @@ export default class extends PureComponent {
         const displayText = hasNotificationPermission
             ? <span className="content">
                 Copy your webhook bellow and paste whathever you want
-                <pre className="sub header">curl -X POST {WEBHOOK_URL}</pre>
+                <pre className="sub header">curl -X POST {API_URL}/hook</pre>
             </span>
             : <span className="content">
                 <i className="circular hand pointer icon"/>
@@ -90,7 +90,7 @@ export default class extends PureComponent {
 
         const displayAction = hasNotificationPermission
             ? <div className="ui fluid action input">
-                <input id="hook" type="text" readOnly="" placeholder="WebHook" defaultValue={WEBHOOK_URL} />
+                <input id="hook" type="text" readOnly="" placeholder="WebHook" defaultValue={`${API_URL}/hook`} />
                 <button className="ui teal right labeled icon button" data-clipboard-target="#hook"
                     ref={(el) => this.buttonCopyHook = el}>
                     <i className="copy icon"/>Copy
