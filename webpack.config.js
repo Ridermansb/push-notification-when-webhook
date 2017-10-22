@@ -6,9 +6,11 @@ const {resolve} = require('path');
 require('dotenv').config();
 const srcFolder = resolve(__dirname, 'src');
 
+const redirectApiPattern = /(\/api\/\*)\W(http.+)(\/\:splat)\W(\d+)/g;
+const WEBHOOK_URL = process.env.WEBHOOK_URL;
+
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
-    // entry: [ resolve(srcFolder, 'index.jsx'), resolve(srcFolder, 'sw.js') ],
     entry: {
         main: resolve(srcFolder, 'index.jsx'),
         vendor: ['react', 'react-dom', 'jquery', 'semantic-ui-css'],
@@ -33,9 +35,19 @@ module.exports = {
             Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
             fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
         }),
-        new CopyWebpackPlugin([
-            { from: '_redirects' }
-        ])
+        new CopyWebpackPlugin([{
+            from: '_redirects',
+            toType: 'file',
+            transform:  function(content, path){
+                if (path.includes('_redirects')) {
+                    const result = content.toString('utf8').replace(redirectApiPattern, `$1 ${WEBHOOK_URL}$3 $4`);
+                    console.log('Replace _redirects', result);
+                    return result;
+                }
+
+                return content;
+            }
+        }])
     ],
     module: {
         rules: [{
