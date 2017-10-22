@@ -1,7 +1,7 @@
 {
   "name": "push-notification-when-webhook",
   "version": "0.0.1",
-  "description": "> Sample demonstration using WebTask.io to handle push notification",
+  "description": "Sample demonstration using WebTask.io to handle push notification",
   "main": "hook.js",
   "scripts": {
     "build:wt": "babel --plugins inline-dotenv hook.es6 --out-file hook.js",
