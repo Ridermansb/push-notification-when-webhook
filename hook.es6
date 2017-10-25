@@ -22,13 +22,15 @@ app.post('/hook', (req, res) => {
         if (!data) {
             data = { subscriptions: [] }
         }
-
         const payload = JSON.stringify({
-            title: 'Hook trigger',
-            body: 'New hook trigger',
+            title: req.body[data.titleField] || 'Hook trigger',
+            body: req.body[data.bodyField] ||'New hook trigger',
         });
+
         const sendPushPromises = data.subscriptions
-            .map(keys => webPush.sendNotification(keys, payload, { TTL: 3600 }));
+            .map(data => {
+                webPush.sendNotification(data.sub, payload, { TTL: 3600 })
+            });
         Promise.all(sendPushPromises)
             .then(resp => res.json(resp))
             .catch(e => res.send(400));
@@ -46,8 +48,12 @@ app.post('/subscribe', (req, res) => {
         }
 
         data.subscriptions.push({
-            endpoint,
-            keys: { p256dh: keys.p256dh, auth: keys.auth },
+            titleField: false,
+            bodyField: false,
+            sub: {
+                endpoint,
+                keys: { p256dh: keys.p256dh, auth: keys.auth },
+            }
         });
         storage.set(data, function() {
             return res.status(200).json({ ok: true })

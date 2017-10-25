@@ -25,40 +25,11 @@ export default class extends PureComponent {
         this.setState({hasNotificationPermission: Notification.permission === 'granted'})
     }
 
-    componentDidMount() {
-        const {hasNotificationPermission} = this.state;
-        if (hasNotificationPermission) {
-            this.setClipboardButton();
-        }
-    }
-
-    componentWillUnmount( ) {
-        if (this.clipHook) {
-            this.clipHook.destroy();
-        }
-    }
-
-    @autobind
-    setClipboardButton() {
-        this.clipHook = new Clipboard(this.buttonCopyHook);
-        this.clipHook.on('success', function(e) {
-            e.clearSelection();
-        });
-
-        this.clipHook.on('error', function(e) {
-            console.error('Action:', e.action);
-            console.error('Trigger:', e.trigger);
-        });
-    }
-
     @autobind
     async askPermission(e) {
         e.preventDefault();
         const status = await Notification.requestPermission();
-        const self = this;
-        this.setState({hasNotificationPermission: status === 'granted'}, function() {
-            self.setClipboardButton();
-        });
+        this.setState({hasNotificationPermission: status === 'granted'});
         if (status === 'granted') {
             await this.saveSubscription()
         }
@@ -81,7 +52,7 @@ export default class extends PureComponent {
         const displayText = hasNotificationPermission
             ? <span className="content">
                 Copy your webhook bellow and paste whathever you want
-                <pre className="sub header">curl -X POST {API_URL}/hook</pre>
+                <span className="sub header">Now please, make a post request to <code>{API_URL}/hook</code></span>
             </span>
             : <span className="content">
                 <i className="circular hand pointer icon"/>
@@ -91,8 +62,10 @@ export default class extends PureComponent {
         const displayAction = hasNotificationPermission
             ? <div className="ui fluid action input">
                 <input id="hook" type="text" readOnly="" placeholder="WebHook" defaultValue={`${API_URL}/hook`} />
-                <button className="ui teal right labeled icon button" data-clipboard-target="#hook"
-                    ref={(el) => this.buttonCopyHook = el}>
+                <button className="ui teal right labeled icon button"
+                        data-clipboard-target="#hook"
+                        data-clipboard-text={`${API_URL}/hook`}
+                    ref={(el) => { new Clipboard(el) }}>
                     <i className="copy icon"/>Copy
                 </button>
             </div>
@@ -105,6 +78,9 @@ export default class extends PureComponent {
                 {displayText}
             </h2>
             {displayAction}
+            {hasNotificationPermission && <span>
+                Try your self <strong><code>curl -X POST {API_URL}/hook</code></strong>
+            </span>}
         </div>
     }
 }
