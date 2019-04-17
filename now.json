@@ -1,7 +1,0 @@
-{
-  "name": "myhook",
-  "alias": "myhook",
-  "dotenv": true,
-  "type": "docker",
-  "public": true
-}

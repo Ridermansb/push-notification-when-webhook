@@ -1,9 +1,12 @@
 **This help you in some way?** [Buy me a cofffe][coffee]  :)   
 https://buymeacoff.ee/ridermansb
 
-> Sample demonstration using WebTask.io to handle push notification
-
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Ridermansb/push-notification-when-webhook)
+
+# Push notification with Netlify
+> Sample demonstration using Netlify to handle push notification
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1ddd7141-4e8a-48a2-afc3-6e12fdca6f5f/deploy-status)](https://app.netlify.com/sites/push-notification-when-webhook/deploys)
 
 ## Get starter
 
